@@ -105,6 +105,7 @@ function checkWin(socketId) {
 function handelWin(socketId) {
     let { player, roomid } = users[socketId]
     let score_won = rooms[roomid][`player${player}-score`] + 1
+    rooms[roomid][`player${player}-score`]=rooms[roomid][`player${player}-score`] + 1
     let score_lost = rooms[roomid][`player${player}-score`]
     rooms[roomid][`player${player}-score`] = score_won
     let box1 = generateBox()
@@ -189,7 +190,6 @@ function storeUser(socketId, roomid, name, avatar, player) {
     if (!rooms.hasOwnProperty(roomid)) {
         rooms[roomid] = {}
     }
-    console.log(name)
     rooms[roomid][`player${player}-name`] = name
     rooms[roomid][`player${player}-avatar`] = avatar
     rooms[roomid][`player${player}-socket`] = socketId
