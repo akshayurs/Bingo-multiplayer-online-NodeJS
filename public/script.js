@@ -276,7 +276,7 @@ socket.on('opponent-won', data => {
         clicked = []
         createCells(data.box)
         zeroBingo()
-    }, 500)
+    }, 1500)
 })
 
 socket.on('you-won', data => {
@@ -286,7 +286,7 @@ socket.on('you-won', data => {
         clicked = []
         zeroBingo()
         createCells(data.box)
-    }, 500)
+    }, 1500)
 })
 
 socket.on("joined", (data) => {
