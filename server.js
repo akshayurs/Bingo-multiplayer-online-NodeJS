@@ -189,6 +189,7 @@ function storeUser(socketId, roomid, name, avatar, player) {
     if (!rooms.hasOwnProperty(roomid)) {
         rooms[roomid] = {}
     }
+    console.log(name)
     rooms[roomid][`player${player}-name`] = name
     rooms[roomid][`player${player}-avatar`] = avatar
     rooms[roomid][`player${player}-socket`] = socketId
