@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="purple">
+    <title>Document</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="icon" href="favicon.jpg" />
+    <link rel="shortcut icon" href="favicon.jpg" />
+    <meta property="og:site_name" content="Bingo Online Multiplayer Game">
+    <meta property="og:title" content="Play Bingo Online with Friends" />
+    <meta property="og:description" content="Online Bingo game with no ads" />
+    <meta name="description" content="Online Bingo game with no ads" />
+    <meta property="og:image" itemprop="image" content="/favicon.jpg">
+    <meta property="og:type" content="website" />
+</head>
+
+<body>
+    <div class="preloader">
+        BINGO<div class="loader"></div>
+    </div>
+    <div class="slides slide1" id="slide1">
+        <div class="title">BINGO</div>
+        <div class="game-desc">
+            B I N G O !! <h2>&#127918;</h2>Online Multiplayer Game<br>Play With your friends<br>Have Fun!<br>
+            &#127937;
+            NO
+            ADS 🥳
+            <br>
+        </div>
+        <div class="play-button-container">
+            <div class="play-button">PLAY</div>
+        </div>
+        <footer>
+            <center>
+                <h3>Made with ❤️ By Akshay Urs</h3>
+                <div class="icons"><a href="https://github.com/akshayurs"><img style="margin: 5px 10px;"
+                            src="/images/github.png" width="20px"></a><a
+                        href="https://www.linkedin.com/in/akshay-urs-m-808098212"><img src="/images/linkedin.png"
+                            style="margin: 5px 10px;" width="20px"></a></div>
+            </center>
+        </footer>
+    </div>
+
+    <div class="slides slide2" id="slide2">
+        <div class="name-title">Enter Your <br>Name</div>
+        <form id="name-form">
+            <div class="name-container">
+                <input type="text" autocomplete="off" value="" id="input-name" placeholder="YOUR NAME">
+                <input type="submit" class="next-btn" value="Next"></input>
+            </div>
+        </form>
+    </div>
+
+    <div class="slides slide3" id="slide3">
+        <div class="avatar-title">Select Avatar</div>
+        <div class="avatar-container">
+            <img src="/images/avatar1.png" class="avatars" data-id="1">
+            <img src="/images/avatar2.png" class="avatars" data-id="2">
+            <img src="/images/avatar3.png" class="avatars" data-id="3">
+            <img src="/images/avatar4.png" class="avatars" data-id="4">
+            <img src="/images/avatar5.png" class="avatars" data-id="5">
+            <img src="/images/avatar6.png" class="avatars" data-id="6">
+        </div>
+    </div>
+
+    <div class="slides slide4">
+        <div class="option-random">
+            <h2>Play with Random Opponent Online</h2>
+            <button id="random-btn">Random Opponent</button>
+        </div>
+        <div class="option-room">
+            <h2>Play With Friends Online</h2>
+            <div class="room-container">
+                <button id="host-btn">Host Game</button>
+                <button id="join-btn">Join Game</button>
+            </div>
+        </div>
+    </div>
+    <div class="slides slide5">
+        <center>
+            <br><br>
+            <img class="avatars" id="selected-avatar">
+            <h2>Player Name : <span id="entered-name"></span></h2>
+            <h2 id="roomid">Room Id : <span id="room-id">WAIT</span></h2>
+            <div class="flex share">
+                <span id="copytext" style="font-size:24px" onclick="copyToClipboard()">&#128203;</span>
+                <a id="whatsapplink"><img src="/images/whatsapp.png" width="30px"></a>
+            </div>
+            <h1>Waiting for other player..</h1>
+        </center>
+    </div>
+
+    <!-- Game screen -->
+    <div class="game-screen flex flex-col">
+        <header>
+            Bingo
+        </header>
+        <div class="flex players">
+            <div class="player flex flex-col">
+                <div class="score flex flex-col">
+                    <img alt="playar avatar" class="avatars game-avatar" id="player-avatar">
+                    <div class="player-name">player</div>
+                    <div class="player-score flex">0</div>
+                </div>
+                <div class="player-completed">
+                    <div class="letters grid" id="player-letter-1">B</div>
+                    <div class="letters grid" id="player-letter-2">I</div>
+                    <div class="letters grid" id="player-letter-3">N</div>
+                    <div class="letters grid" id="player-letter-4">G</div>
+                    <div class="letters grid" id="player-letter-5">O</div>
+                </div>
+            </div>
+            <div class="player flex flex-col">
+                <div class="score flex flex-col">
+                    <img alt="opponent avatar" class="avatars game-avatar" id="opponent-avatar">
+                    <div class="opponent-name">opponent</div>
+                    <div class="opponent-score flex">0</div>
+                </div>
+                <div class="opponent-completed">
+                    <div class="letters grid" id="opponent-letter-1">B</div>
+                    <div class="letters grid" id="opponent-letter-2">I</div>
+                    <div class="letters grid" id="opponent-letter-3">N</div>
+                    <div class="letters grid" id="opponent-letter-4">G</div>
+                    <div class="letters grid" id="opponent-letter-5">O</div>
+                </div>
+            </div>
+        </div>
+        <div class="move">Your Turn</div>
+        <div class="box grid">
+        </div>
+    </div>
+    <audio src="/player1.mp3" id="player1-sound"></audio>
+    <audio src="/player2.mp3" id="player2-sound"></audio>
+    <audio src="/winning.mp3" id="winning-sound"></audio>
+    <audio src="/lossing.mp3" id="lossing-sound"></audio>
+    <audio src="/next.mp3" id="next-sound"></audio>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>var roomid = "<%=roomid%>"</script>
+    <script src="/script.js"></script>
+</body>
+
+</html>
