@@ -140,6 +140,11 @@ function zeroBingo() {
     fillBingo('opponent', 0)
 }
 
+//go to home page while playing
+function gotohome(){
+    location.replace(location.protocol + "//" + location.host);
+}
+
 //Fill green color when clicked
 function fillCell(index) {
     document.getElementById(index).style.backgroundColor = 'aquamarine'
