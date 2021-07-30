@@ -67,6 +67,7 @@ body{
     letter-spacing: 0.5rem;
     background: lightgray;
     box-shadow: 1px 1px 50px #9F5F80;
+    user-select: none;
 }
 
 .game-desc{
@@ -303,12 +304,14 @@ header{
     margin-top: 10px;
     display: grid;
     grid-template-columns: repeat(5,1fr) ;
+    user-select: none;
 }
 .players{
     margin-top: 30px;
     grid-template-columns: auto auto;
     width:90vmin;
     justify-content: space-between;
+    user-select: none;
 }
 .player{
     flex:1;
@@ -316,6 +319,7 @@ header{
 .score{
     font-size: 20px;
     letter-spacing: 3px;
+    user-select: none;
 }
 
 .letters{
@@ -326,6 +330,7 @@ header{
     font-size: 25px;
     margin: 1px;
     border-radius: 2px;
+    user-select: none;
 }
 .move{
     margin-top:50px;
