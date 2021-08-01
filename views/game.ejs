@@ -10,19 +10,18 @@
     <link rel="stylesheet" href="/style.css">
     <link rel="icon" href="/favicon.jpg" type="image/x-icon" />
     <link rel="shortcut icon" href="/favicon.jpg" type="image/x-icon" />
+    <meta property=" og:site_name" content="Bingo Online Multiplayer Game">
+    <meta property="og:title" content="Play Bingo Online with Friends" />
+    <meta property="og:description" content="Online Bingo game with no ads" />
     <meta name="description" content="Online Bingo game with no ads" />
-    <meta property="og:title" content="Bingo Online Multiplayer Game">
-    <meta property="og:site_name" content="BINGO!!">
-    <meta property="og:url" content="bingobyakshay.herokuapp.com">
-    <meta property="og:description" content="Play with your Friends and Family or with random players online. It's completely free with no ads.">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="http://bingobyakshay.herokuapp.com/favicon.jpg">
-
+    <meta property="og:image" itemprop="image" content="/favicon.jpg">
+    <meta property="og:type" content="website" />
 </head>
 
 <body>
     <div class="preloader">
-        BINGO&#9889;<div class="loader"></div>
+        BINGO&#9889;
+        <div class="loader"></div>
     </div>
     <div class="slides slide1" id="slide1">
         <div class="title">BINGO</div>
@@ -136,12 +135,15 @@
         <div class="move">Your Turn</div>
         <div class="box grid">
         </div>
+        <div class="received-msgs"></div>
+        <div class="chat-btn"> 💬CHAT</div>
     </div>
     <audio src="/audio/player1.mp3" id="player1-sound"></audio>
     <audio src="/audio/player2.mp3" id="player2-sound"></audio>
     <audio src="/audio/winning.mp3" id="winning-sound"></audio>
     <audio src="/audio/lossing.mp3" id="lossing-sound"></audio>
     <audio src="/audio/next.mp3" id="next-sound"></audio>
+    <audio src="/audio/chat.mp3" id="chat-sound"></audio>
     <script src="/socket.io/socket.io.js"></script>
     <script>var roomid = "<%=roomid%>"</script>
     <script src="/script.js"></script>
