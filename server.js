@@ -235,6 +235,12 @@ function isRoomValid(roomid) {
     }
     return valid
 }
+//chatting inside game
+function handlechat(socketId, msg) {
+    let { player, roomid } = users[socketId]
+    io.to(rooms[roomid][`player${player == 1 ? 2 : 1}-socket`]).emit('chat', { msg })
+    console.log(msg)
+}
 
 //game data
 var users = new Object()
@@ -295,6 +301,19 @@ io.on('connection', socket => {
 
         onClick(socket.id, parseInt(data.cellid))
     })
+    socket.on('chat', data => {
+        if (!users.hasOwnProperty(socket.id)) {
+            socket.emit('error', { error: "User Invalid" })
+            removeUser(socket.id)
+            return
+        }
+        if (!rooms.hasOwnProperty(users[socket.id].roomid)) {
+            socket.emit('error', { error: "Roomid Invalid" })
+            removeUser(socket.id)
+            return
+        }
+        handlechat(socket.id, sanitizeHTML(data.msg, { allowedTags: [], allowedAttributes: {} }))
+    })
     socket.on("disconnect", () => {
         removeUser(socket.id)
     })
@@ -312,6 +331,7 @@ io.on('connection', socket => {
         }
         handelRandom(socket.id, data.name, data.avatar)
     })
+
 })
 
 //listening on port
