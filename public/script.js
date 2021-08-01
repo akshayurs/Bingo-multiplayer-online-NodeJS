@@ -76,7 +76,7 @@ document.querySelectorAll('.form-prevent').forEach(ele => {
     })
 })
 document.querySelector('.chat-btn').addEventListener('click', () => {
-    let input = document.querySelector('.chat-input').value
+    let input = document.querySelector('.chat-input')
     let msg = input.value
     if (msg != "") {
         socket.emit("chat", { msg })
