@@ -18,6 +18,9 @@ app.get('/', (req, res) => {
 app.get('/join/:roomid', (req, res) => {
     res.render('game', { roomid: req.params.roomid.toLowerCase() })
 })
+app.use((req, res, next) => {
+    res.send(`<a href="/">Go to Home Page</a>`)
+})
 
 //Shuffled array
 function generateBox() {
@@ -43,33 +46,41 @@ function generateRoomId() {
 
 //Check for Valid Click and send to opponent
 function onClick(socketId, cellId) {
-    if (users.hasOwnProperty(socketId)) {
-        let { player, roomid } = users[socketId]
-        if (isRoomValid(roomid)) {
-            if (users[socketId]['player'] == rooms[roomid]['turn']) {
-                let box = rooms[roomid][`box-clicked`]
-                let opponent = player == 1 ? 2 : 1
-                if (box.indexOf(cellId) == -1 && cellId <= 25 && cellId >= 1) {
-                    let val = rooms[roomid][`player${player}-box`][cellId - 1]
-                    let index = rooms[roomid][`player${opponent}-box`].indexOf(val) + 1
-                    rooms[roomid][`box-clicked`].push(val)
-                    io.to(rooms[roomid][`player${opponent}-socket`]).emit("opponent-clicked", { clickid: index, turn: true })
-                } else {
-                    io.to(socketId).emit("cheat", { error: "TRYING TO CHEAT" })
-                }
-                checkWin(socketId)
-                checkWin(rooms[roomid][`player${opponent}-socket`])
-                rooms[roomid]['turn'] = rooms[roomid]['turn'] == 1 ? 2 : 1
+    let { player, roomid } = users[socketId]
+    if (isRoomValid(roomid)) {
+        let roomObject = rooms[roomid]
+        if (users[socketId]['player'] == roomObject['turn']) {
+            let box = roomObject[`box-clicked`]
+            let opponent = player == 1 ? 2 : 1
+            if (!box.has(roomObject[`player${player}-box`][cellId - 1]) && cellId <= 25 && cellId >= 1) {
+                let val = roomObject[`player${player}-box`][cellId - 1]
+                let index = roomObject[`player${opponent}-box`].indexOf(val) + 1
+                roomObject[`box-clicked`].add(val)
+                io.to(roomObject[`player${opponent}-socket`]).emit("opponent-clicked", { clickid: index, turn: true })
+            } else {
+                io.to(socketId).emit("error", { error: "TRYING TO CHEAT" })
+                removeUser(socketId)
+                return
+            }
+            roomObject['turn'] = roomObject['turn'] == 1 ? 2 : 1
+            let won = checkWin(socketId)
+            let won1 = checkWin(roomObject[`player${opponent}-socket`])
+            if (won || won1) {
+                setBoxAfterWin(roomid)
             }
         }
     } else {
         io.to(socketId).emit("error", { error: "user invalid" })
+        removeUser(socketId)
+        return
     }
-
 }
 
 //check for winning combinations
 function checkWin(socketId) {
+    if (!users.hasOwnProperty(socketId)) {
+        return 0
+    }
     const wincomb = [
         [1, 2, 3, 4, 5],
         [6, 7, 8, 9, 10],
@@ -88,33 +99,42 @@ function checkWin(socketId) {
     let box = rooms[roomid][`player${player}-box`]
     let clicked = rooms[roomid][`box-clicked`]
     let playerBingo = 0
-    for (let comb of wincomb) {
-        if (clicked.indexOf(box[comb[0] - 1]) != -1 && clicked.indexOf(box[comb[1] - 1]) != -1 && clicked.indexOf(box[comb[2] - 1]) != -1 && clicked.indexOf(box[comb[3] - 1]) != -1 && clicked.indexOf(box[comb[4] - 1]) != -1) {
-            playerBingo++;
+    wincomb.forEach(comb => {
+        if (clicked.has(box[comb[0] - 1]) && clicked.has(box[comb[1] - 1]) && clicked.has(box[comb[2] - 1]) && clicked.has(box[comb[3] - 1]) && clicked.has(box[comb[4] - 1])) {
+            playerBingo++
         }
-    }
+    })
     io.to(socketId).emit("player-bingo", { bingo: playerBingo })
     io.to(rooms[roomid][`player${player == 1 ? 2 : 1}-socket`]).emit("opponent-bingo", { bingo: playerBingo })
-
     if (playerBingo >= 5) {
         handelWin(socketId)
+        return 1
     }
+    return 0
 }
 
 //handel win
 function handelWin(socketId) {
     let { player, roomid } = users[socketId]
-    let score_won = rooms[roomid][`player${player}-score`] + 1
-    rooms[roomid][`player${player}-score`]=rooms[roomid][`player${player}-score`] + 1
-    let score_lost = rooms[roomid][`player${player}-score`]
-    rooms[roomid][`player${player}-score`] = score_won
+    let roomObject = rooms[roomid]
+    roomObject[`player${player}-score`] = roomObject[`player${player}-score`] + 1
+    let score_won = roomObject[`player${player}-score`]
+    let score_lost = roomObject[`player${player == 1 ? 2 : 1}-score`]
+    io.to(roomObject[`player${player == 1 ? 2 : 1}-socket`]).emit("opponent-won", { yourScore: score_lost, opponentScore: score_won, turn: false })
+    io.to(socketId).emit("you-won", { yourScore: score_won, opponentScore: score_lost, turn: true })
+    roomObject['turn'] = player
+}
+
+// set box after handel win
+function setBoxAfterWin(roomid) {
+    let roomObject = rooms[roomid]
     let box1 = generateBox()
     let box2 = generateBox()
-    rooms[roomid]['player1-box'] = box1
-    rooms[roomid]['player2-box'] = box2
-    rooms[roomid]['box-clicked'] = []
-    io.to(rooms[roomid][`player${player == 1 ? 2 : 1}-socket`]).emit("opponent-won", { box: player == 1 ? box2 : box1, yourScore: score_lost, opponentScore: score_won, turn: false })
-    io.to(socketId).emit("you-won", { box: player == 1 ? box1 : box2, yourScore: score_won, opponentScore: score_lost, turn: true })
+    roomObject['player1-box'] = box1
+    roomObject['player2-box'] = box2
+    roomObject['box-clicked'] = new Set()
+    io.to(roomObject[`player1-socket`]).emit("set-box", { box: box1 })
+    io.to(roomObject[`player2-socket`]).emit("set-box", { box: box2 })
 }
 
 //remove user from server data
@@ -128,22 +148,27 @@ function removeUser(socketId) {
         }
         delete users[socketId]
     }
-    lobby = lobby.filter(id => id != socketId)
+    if (socketId == lobby) {
+        lobby = ""
+    }
 }
 
 //player joined
 function handelJoin(socketId, roomid, name, avatar) {
     if (isRoomValid(roomid)) {
+        let roomObject = rooms[roomid]
         users[socketId] = { name: name, roomid: roomid, player: 2 }
         let box = generateBox()
         storeUser(socketId, roomid, name, avatar, 2)
-        rooms[roomid]['player2-box'] = box
-        io.to(rooms[roomid][`player1-socket`]).emit("other-player-joined", { player: name, avatar: avatar })
-        io.to(socketId).emit("joined", { player: rooms[roomid][`player1-name`], box: box, avatar: rooms[roomid][`player1-avatar`] })
-        io.to(rooms[roomid][`player1-socket`]).emit("start-game", { turn: true })
+        roomObject['player2-box'] = box
+        io.to(roomObject[`player1-socket`]).emit("other-player-joined", { player: name, avatar: avatar })
+        io.to(socketId).emit("joined", { player: roomObject[`player1-name`], box: box, avatar: roomObject[`player1-avatar`] })
+        io.to(roomObject[`player1-socket`]).emit("start-game", { turn: true })
         io.to(socketId).emit("start-game", { turn: false })
     } else {
         io.to(socketId).emit("error", { error: "enter valid room id" })
+        removeUser(socketId)
+        return
     }
 }
 
@@ -160,18 +185,18 @@ function handelHost(socketId, name, avatar) {
 
 //to handel random-mode connected players
 function handelRandom(socketId, name, avatar) {
-    if (lobby.length == 0) {
-        lobby.push(socketId)
-        let box = generateBox()
+    let box = generateBox()
+    if (lobby == "") {
+        lobby = socketId
         let roomid = generateRoomId()
         users[socketId] = { name: name, roomid: roomid, player: 1 }
         storeUser(socketId, roomid, name, avatar, 1)
-        rooms[roomid]['player1-box'] = box
         rooms[roomid]['turn'] = 1
+        rooms[roomid]['player1-box'] = box
         io.to(socketId).emit("random-joined", { box: box })
     } else {
-        let opponentSocket = lobby.shift()
-        let box = generateBox()
+        let opponentSocket = lobby
+        lobby = ""
         let roomid = users[opponentSocket].roomid
         users[socketId] = { name: name, roomid: roomid, player: 2 }
         storeUser(socketId, roomid, name, avatar, 2)
@@ -190,11 +215,12 @@ function storeUser(socketId, roomid, name, avatar, player) {
     if (!rooms.hasOwnProperty(roomid)) {
         rooms[roomid] = {}
     }
-    rooms[roomid][`player${player}-name`] = name
-    rooms[roomid][`player${player}-avatar`] = avatar
-    rooms[roomid][`player${player}-socket`] = socketId
-    rooms[roomid][`player${player}-score`] = 0
-    rooms[roomid][`box-clicked`] = []
+    let roomObject = rooms[roomid]
+    roomObject[`player${player}-name`] = name
+    roomObject[`player${player}-avatar`] = avatar
+    roomObject[`player${player}-socket`] = socketId
+    roomObject[`player${player}-score`] = 0
+    roomObject[`box-clicked`] = new Set()
 }
 
 //check room is valid or not
@@ -213,7 +239,7 @@ function isRoomValid(roomid) {
 //game data
 var users = new Object()
 var rooms = new Object()
-var lobby = []
+var lobby = ""
 
 // game connections with socket
 io.on('connection', socket => {
@@ -221,44 +247,65 @@ io.on('connection', socket => {
         let num = parseInt(data.avatar)
         if (num == NaN || num < 1 || num > 6) {
             socket.emit("error", { error: "avatar not selected" })
+            removeUser(socket.id)
             return
         }
         if (data.name == "" || data.name == "null" || data.name == undefined) {
             socket.emit("error", { error: "Name incorrect" })
+            removeUser(socket.id)
             return
         }
         handelHost(socket.id, sanitizeHTML(data.name, { allowedTags: [], allowedAttributes: {} }), data.avatar)
     })
     socket.on("join", data => {
         let num = parseInt(data.avatar)
-        if (num == NaN || num < 1 || num > 6) {
+        if (num == NaN || num < 1 || num > 8) {
             socket.emit("error", { error: "avatar not selected" })
+            removeUser(socket.id)
             return
         }
         if (data.name == "" || data.name == "null" || data.name == undefined) {
             socket.emit("error", { error: "Name incorrect" })
+            removeUser(socket.id)
             return
         }
         if (data.roomid == "" || data.roomid == "null" || data.roomid == undefined) {
             socket.emit("error", { error: "roomid incorrect" })
+            removeUser(socket.id)
             return
         }
         handelJoin(socket.id, data.roomid.toLowerCase(), sanitizeHTML(data.name, { allowedTags: [], allowedAttributes: {} }), data.avatar)
     })
     socket.on('clicked', data => {
-        onClick(socket.id, data.cellid)
+        if (typeof (data.cellid) != "number") {
+            socket.emit('error', { error: "invalid click" })
+            removeUser(socket.id)
+            return
+        }
+        if (!users.hasOwnProperty(socket.id)) {
+            removeUser(socket.id)
+            return
+        }
+        if (!rooms.hasOwnProperty(users[socket.id].roomid)) {
+            removeUser(socket.id)
+            return
+        }
+
+        onClick(socket.id, parseInt(data.cellid))
     })
     socket.on("disconnect", () => {
         removeUser(socket.id)
     })
     socket.on('random', (data) => {
         let num = parseInt(data.avatar)
-        if (num == NaN || num < 1 || num > 6) {
+        if (num == NaN || num < 1 || num > 8) {
             socket.emit("error", { error: "avatar not selected" })
+            removeUser(socket.id)
             return
         }
         if (data.name == "" || data.name == "null" || data.name == undefined) {
             socket.emit("error", { error: "Name incorrect" })
+            removeUser(socket.id)
             return
         }
         handelRandom(socket.id, data.name, data.avatar)
