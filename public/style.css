@@ -4,6 +4,17 @@
     box-sizing: border-box;
     font-family: sans-serif;
 }
+@font-face {
+    font-family: "Big Shoulders Stencil Display";
+    src: url("./fonts/BigShouldersStencilDisplay-Bold.ttf");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "Indie Flower";
+    src: url("./fonts/IndieFlower-Regular.ttf");
+    font-weight: bold;
+}
 
 html{
     scroll-behavior: smooth;
@@ -185,7 +196,7 @@ body{
     justify-items:center;
     margin: 0 auto;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows:1fr 1fr 1fr;
+    grid-template-rows:1fr 1fr 1fr 1fr;
     animation: side .5s ease-out;
 }
 
@@ -263,11 +274,7 @@ body{
     color:white;
     border: .1px solid white;
 }
-.flex{
-    display: flex;
-    align-items:center;
-    justify-content: center;
-}
+
 .slide5{
     display: none;
     background-color: #113311;
@@ -289,68 +296,106 @@ body{
 }
 .game-screen{
     display: none;
+    justify-content: center;
+    align-items: center;
+    animation: side 1s ease-out;
 }
-header{
-    width:100%;
+header {
+    width: 100%;
     padding: 15px 0;
     text-align: center;
-    font-size: 35px;
-    font-weight: 300;
-    background-color: aquamarine;
+    font-size: 2.5rem;
+    background-color: #010101;
     box-shadow: 1px 1px 5px black;
+    text-shadow: 1px 1px 0.5px #ee1d52, -1.5px -1.5px 0.5px #69c9d0;
+    box-shadow: 1px 1px 10px #ee1d52, 2px 2px 25px #69c9d0;
+    letter-spacing: .2rem;
     user-select: none;
 }
-.player-completed,.opponent-completed{
+header a {
+    color: white;
+    font-family: 'Big Shoulders Stencil Display' !important;
+    text-decoration: none;
+}.player-completed,
+.opponent-completed {
     margin-top: 10px;
     display: grid;
-    grid-template-columns: repeat(5,1fr) ;
-    user-select: none;
-}
-.players{
-    margin-top: 30px;
-    grid-template-columns: auto auto;
-    width:90vmin;
-    justify-content: space-between;
-    user-select: none;
-}
-.player{
-    flex:1;
-}
-.score{
-    font-size: 20px;
-    letter-spacing: 3px;
+    grid-template-columns: repeat(5, 1fr);
     user-select: none;
 }
 
-.letters{
-    background-color: lightgray;
-    border:1px solid black;
-    min-height:30px;
+.players {
+    text-transform: uppercase;
+    margin-top: 20px;
+    grid-template-columns: auto auto;
+    width: 90vmin;
+    justify-content: space-between;
+    user-select: none;
+}
+
+.player {
+    flex: 1;
+}
+
+.player-name,
+.opponent-name {
+    margin-top: 5px;
+}
+
+.score {
+    font-size: 20px;
+    letter-spacing: 1.5px;
+    user-select: none;
+}
+
+.player-score,
+.opponent-score {
+    font-family: 'Big Shoulders Stencil Display' !important;
+    font-size: 1.2rem;
+}
+
+.letters {
+    background-color: rgb(235, 235, 235);
+    border: 1px solid black;
+    min-height: 30px;
     min-width: 30px;
     font-size: 25px;
     margin: 1px;
     border-radius: 2px;
     user-select: none;
+    font-family: "Indie Flower", cursive;
 }
-.move{
-    margin-top:50px;
+.move {
+    margin-top: 20px;
     font-size: 25px;
-    margin-bottom:5px;
-    text-shadow: -0.5px 0.5px 2px black;
+    margin-bottom: 5px;
+    color: black;
+    text-shadow: 1px 1px 5px tan;
+    font-family: 'Big Shoulders Stencil Display' !important;
+    letter-spacing: 3px;
     user-select: none;
 }
-.box{
-    grid-template-columns: repeat(5,17vmin);
-    grid-template-rows: repeat(5,17vmin);
-    border: 2px solid black;
+
+.box {
+    margin-top: 5px;
+    grid-template-columns: repeat(5, 17vmin);
+    grid-template-rows: repeat(5, 17vmin);
+    border: 1.5px solid black;
 }
-.cell{
+
+.cell {
     width: 17vmin;
     height: 17vmin;
-    border:1.2px solid black;
+    border: .8px solid black;
     font-size: 30px;
-    background-color: lightgray;
+    font-family: "Indie Flower", cursive;
+    background-color: rgb(235, 235, 235);
     user-select: none;
+}
+.flex{
+    display: flex;
+    align-items:center;
+    justify-content: center;
 }
 .flex-col{
     flex-direction: column;
