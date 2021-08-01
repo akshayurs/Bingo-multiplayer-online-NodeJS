@@ -118,7 +118,7 @@ body{
     background-size: contain;
     background-attachment: fixed;
 }
-.name-form{
+#name-form{
     margin-top: 200px;
 }
 .name-title{
