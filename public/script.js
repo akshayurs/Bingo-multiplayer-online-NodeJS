@@ -5,7 +5,10 @@ var skip = false
 if (roomid != "") {
     skip = true
 }
-
+let storagename = localStorage.getItem('bingo-name')
+if (storagename) {
+    document.querySelector('#input-name').value = storagename
+}
 window.addEventListener('load', () => {
     document.querySelector('.preloader').style.display = "none"
     document.querySelector('[name="theme-color"]').setAttribute('content', "lightgrey")
@@ -19,10 +22,6 @@ document.querySelector('.play-button').addEventListener('click', (e) => {
     document.querySelector(".slide1").style.display = "none"
     document.querySelector(".slide2").style.display = "block"
     document.querySelector('#next-sound').play()
-    let storagename = localStorage.getItem('bingo-name')
-    if (storagename) {
-        document.querySelector('#input-name').value = storagename
-    }
 })
 document.querySelector('.next-btn').addEventListener('click', (e) => {
     name = document.querySelector('#input-name').value
@@ -78,7 +77,7 @@ document.getElementById("name-form").addEventListener("submit", (e) => {
 
 //GAME
 //game data
-var clicked = new Array()
+var clicked = new Set()
 var isPlayerMove = false
 var name = ""
 var socket = io()
@@ -125,11 +124,11 @@ function createCells(arr) {
 function fillBingo(player, num) {
     num = num > 5 ? 5 : num
     for (let i = 1; i <= num; i++) {
-        document.querySelector(`#${player}-letter-${i}`).style.backgroundColor = 'green'
+        document.querySelector(`#${player}-letter-${i}`).style.backgroundColor = '#ac0081'
         document.querySelector(`#${player}-letter-${i}`).style.color = 'White'
     }
     for (let i = num + 1; i <= 5; i++) {
-        document.querySelector(`#${player}-letter-${i}`).style.backgroundColor = 'lightgray'
+        document.querySelector(`#${player}-letter-${i}`).style.backgroundColor = 'rgb(235, 235, 235)'
         document.querySelector(`#${player}-letter-${i}`).style.color = 'black'
     }
 }
@@ -140,19 +139,15 @@ function zeroBingo() {
     fillBingo('opponent', 0)
 }
 
-//go to home page while playing
-function gotohome(){
-    location.replace(location.protocol + "//" + location.host);
-}
-
 //Fill green color when clicked
 function fillCell(index) {
-    document.getElementById(index).style.backgroundColor = 'aquamarine'
+    document.getElementById(index).style.backgroundColor = 'teal'
+    document.getElementById(index).style.color = 'white'
 }
 
 //Check click is valid or not
 function checkClick(index) {
-    return !clicked.includes(index)
+    return !clicked.has(index)
 }
 
 //change score
@@ -161,15 +156,17 @@ function setScore(player, opponent) {
     document.querySelector(".opponent-score").innerHTML = opponent
 }
 
-//Handel click
+//Handel click in game
 function handelClick(index) {
+    index = parseInt(index)
     if (checkClick(index) && isPlayerMove) {
         document.getElementById("player1-sound").play()
-        clicked.push(index)
+        clicked.add(index)
         fillCell(index)
         socket.emit("clicked", { cellid: index })
         isPlayerMove = false
         document.querySelector('.move').innerHTML = "Opponent's Turn"
+        console.log("clicked box you clicked", clicked)
     }
 }
 
@@ -181,7 +178,6 @@ function handelHost() {
         getUsername()
         document.querySelector("#host-btn").click()
     }
-
 }
 
 //Handel JOIN
@@ -234,10 +230,12 @@ socket.on('other-player-joined', data => {
 
 socket.on("opponent-clicked", (data) => {
     document.getElementById("player2-sound").play()
-    clicked.push(data.clickid)
+    clicked.add(data.clickid)
     fillCell(data.clickid)
     isPlayerMove = data.turn
     document.querySelector('.move').innerHTML = "Your Turn"
+    console.log("opponent clicked socket data", data)
+    console.log("clicked box after opponent-clicked", clicked)
 })
 socket.on("opponent-bingo", (data) => {
     if (prevOpponentBingo != data.bingo) {
@@ -258,10 +256,6 @@ socket.on("error", (data) => {
     location.replace(location.protocol + "//" + location.host);
 })
 
-socket.on("cheat", (data) => {
-    alert(JSON.stringify(data))
-})
-
 socket.on("hosted", (data) => {
     createCells(data.box)
     document.querySelector('.player-name').innerHTML = name
@@ -272,21 +266,29 @@ socket.on("hosted", (data) => {
 socket.on('opponent-won', data => {
     document.getElementById("lossing-sound").play()
     setScore(data.yourScore, data.opponentScore)
-    setTimeout(() => {
-        clicked = []
-        createCells(data.box)
-        zeroBingo()
-    }, 1500)
+    isPlayerMove = data.turn
 })
 
 socket.on('you-won', data => {
     document.getElementById("winning-sound").play()
     setScore(data.yourScore, data.opponentScore)
+    isPlayerMove = data.turn
+})
+
+socket.on('set-box', data => {
+    let prevTurnValue = isPlayerMove
+    isPlayerMove = false
     setTimeout(() => {
-        clicked = []
+        clicked = new Set()
         zeroBingo()
         createCells(data.box)
     }, 1500)
+    isPlayerMove = prevTurnValue
+    if (isPlayerMove) {
+        document.querySelector('.move').innerHTML = "Your Turn"
+    } else {
+        document.querySelector('.move').innerHTML = "Opponent's Turn"
+    }
 })
 
 socket.on("joined", (data) => {
@@ -303,7 +305,7 @@ socket.on('start-game', data => {
     document.querySelector('#next-sound').play()
     document.querySelector('.slide5').style.display = "none"
     document.querySelector('.game-screen').style.display = "flex"
-    document.querySelector('[name="theme-color"]').setAttribute('content', "aquamarine")
+    document.querySelector('[name="theme-color"]').setAttribute('content', "black")
     isPlayerMove = data.turn
     if (isPlayerMove) {
         document.querySelector('.move').innerHTML = "Your Turn"
