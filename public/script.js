@@ -260,7 +260,7 @@ socket.on("hosted", (data) => {
     createCells(data.box)
     document.querySelector('.player-name').innerHTML = name
     document.getElementById("room-id").innerHTML = data.roomid
-    document.getElementById('whatsapplink').href = `whatsapp://send?text=JOIN *BINGO* ONLINE MULTIPLAYER ${location.protocol}//${location.host}/join/${data.roomid}`
+    document.getElementById('whatsapplink').href = `whatsapp://send?text=${name} has invited you to join Bingo Online Multiplayer Game.%0D%0A %0D%0AClick the link to join game %0D%0A${location.protocol}//${location.host}/join/${data.roomid}`
 })
 
 socket.on('opponent-won', data => {
