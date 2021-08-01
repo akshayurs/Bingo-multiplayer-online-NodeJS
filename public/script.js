@@ -73,6 +73,12 @@ document.querySelector('#host-btn').addEventListener('click', (e) => {
 document.getElementById("name-form").addEventListener("submit", (e) => {
     e.preventDefault()
 })
+document.querySelector('.chat-btn').addEventListener('click', () => {
+    let msg = prompt("ENTER TEXT");
+    if (msg != "" && msg != "null") {
+        socket.emit("chat", { msg })
+    }
+})
 
 
 //GAME
@@ -83,6 +89,7 @@ var name = ""
 var socket = io()
 var prevOpponentBingo = 0
 var prevPlayerBingo = 0
+var timer
 //copy to clipbard
 function copyToClipboard() {
     var aux = document.createElement("input");
@@ -154,6 +161,19 @@ function checkClick(index) {
 function setScore(player, opponent) {
     document.querySelector(".player-score").innerHTML = player
     document.querySelector(".opponent-score").innerHTML = opponent
+}
+
+//add msgs to page
+function addchat(msg) {
+    document.querySelector('#chat-sound').play()
+    let ele = document.createElement('div')
+    ele.classList.add('received-msg')
+    ele.innerHTML = msg
+    let parent = document.querySelector('.received-msgs')
+    parent.appendChild(ele)
+    timer = setTimeout(() => {
+        parent.removeChild(ele)
+    }, 5000)
 }
 
 //Handel click in game
@@ -312,4 +332,8 @@ socket.on('start-game', data => {
     } else {
         document.querySelector('.move').innerHTML = "Opponent's Turn"
     }
+})
+
+socket.on('chat', data => {
+    addchat(data.msg)
 })
