@@ -245,7 +245,7 @@ var lobby = ""
 io.on('connection', socket => {
     socket.on("host", (data) => {
         let num = parseInt(data.avatar)
-        if (num == NaN || num < 1 || num > 6) {
+        if (isNaN(num) || num < 1 || num > 8) {
             socket.emit("error", { error: "avatar not selected" })
             removeUser(socket.id)
             return
@@ -259,7 +259,7 @@ io.on('connection', socket => {
     })
     socket.on("join", data => {
         let num = parseInt(data.avatar)
-        if (num == NaN || num < 1 || num > 8) {
+        if (isNaN(num) || num < 1 || num > 8) {
             socket.emit("error", { error: "avatar not selected" })
             removeUser(socket.id)
             return
@@ -277,16 +277,18 @@ io.on('connection', socket => {
         handelJoin(socket.id, data.roomid.toLowerCase(), sanitizeHTML(data.name, { allowedTags: [], allowedAttributes: {} }), data.avatar)
     })
     socket.on('clicked', data => {
-        if (typeof (data.cellid) != "number") {
+        if (typeof (data.cellid) != "number" || isNaN(data.cellid)) {
             socket.emit('error', { error: "invalid click" })
             removeUser(socket.id)
             return
         }
         if (!users.hasOwnProperty(socket.id)) {
+            socket.emit('error', { error: "User Invalid" })
             removeUser(socket.id)
             return
         }
         if (!rooms.hasOwnProperty(users[socket.id].roomid)) {
+            socket.emit('error', { error: "Roomid Invalid" })
             removeUser(socket.id)
             return
         }
@@ -298,7 +300,7 @@ io.on('connection', socket => {
     })
     socket.on('random', (data) => {
         let num = parseInt(data.avatar)
-        if (num == NaN || num < 1 || num > 8) {
+        if (isNaN(num) || num < 1 || num > 8) {
             socket.emit("error", { error: "avatar not selected" })
             removeUser(socket.id)
             return
