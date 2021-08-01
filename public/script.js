@@ -70,8 +70,10 @@ document.querySelector('#host-btn').addEventListener('click', (e) => {
     document.querySelector('[name="theme-color"]').setAttribute('content', "darkgreen")
     handelHost()
 })
-document.getElementById("form-prevent").addEventListener("submit", (e) => {
-    e.preventDefault()
+document.querySelectorAll('.form-prevent').forEach(ele => {
+    ele.addEventListener("submit", (e) => {
+        e.preventDefault()
+    })
 })
 document.querySelector('.chat-btn').addEventListener('click', () => {
     let input = document.querySelector('.chat-input').value
