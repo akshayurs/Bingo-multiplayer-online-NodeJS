@@ -30,20 +30,21 @@ body{
     border-bottom: 16px solid #000000;
     width: 100px;
     height: 100px;
-    -webkit-animation: spin 2s linear infinite;
-    animation: spin 2s linear infinite;
-  }
-  
-  @keyframes spin {
+    -webkit-animation: spin 2s ease-in-out infinite;
+    animation: spin 1s ease-out infinite;
+}
+
+@keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-  }
+}
 .preloader{
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:space-evenly;
     position:fixed;
+    font-family: cursive;
     top:0;
     height:100vh;
     width:100%;
@@ -414,4 +415,35 @@ footer{
 footer h3{
     padding: 5px 0;
     font-weight: 350;
+}
+.chat-btn {
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: 500;
+    user-select: none;
+}
+.received-msgs{
+    position: absolute;
+    bottom: 25px;
+    left: 20px;
+}
+.received-msg {
+    padding: 10px;
+    margin: 5px;
+    max-width: 300px;
+    overflow-wrap: break-word;
+    color: white;
+    text-shadow: -1px 1px 4px black;
+    background-color: rgb(91, 214, 177);
+    box-shadow: -1px 1px 4px black;
+    border-radius: 10px;
+    border-bottom-left-radius: 0;
+    pointer-events: none;
+    animation: disappear 0.5s ease-out;
+}
+
+@keyframes disappear {
+    0% {
+        transform: translateY(50px);
+    }
 }
