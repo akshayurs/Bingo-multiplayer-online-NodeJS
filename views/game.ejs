@@ -10,12 +10,13 @@
     <link rel="stylesheet" href="/style.css">
     <link rel="icon" href="/favicon.jpg" type="image/x-icon" />
     <link rel="shortcut icon" href="/favicon.jpg" type="image/x-icon" />
-    <meta property=" og:site_name" content="Bingo Online Multiplayer Game">
-    <meta property="og:title" content="Play Bingo Online with Friends" />
-    <meta property="og:description" content="Online Bingo game with no ads" />
     <meta name="description" content="Online Bingo game with no ads" />
-    <meta property="og:image" itemprop="image" content="/favicon.jpg">
-    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Bingo Online Multiplayer Game">
+    <meta property="og:site_name" content="BINGO!!">
+    <meta property="og:url" content="bingobyakshay.herokuapp.com">
+    <meta property="og:description" content="Play with your Friends and Family or with random players online. It's completely free with no ads.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="http://bingobyakshay.herokuapp.com/favicon.jpg">
 </head>
 
 <body>
@@ -48,7 +49,7 @@
 
     <div class="slides slide2" id="slide2">
         <div class="name-title">Enter Your <br>Name</div>
-        <form id="name-form">
+        <form id="form-prevent">
             <div class="name-container">
                 <input type="text" autocomplete="off" value="" id="input-name" placeholder="YOUR NAME">
                 <input type="submit" class="next-btn" value="Next"></input>
@@ -136,7 +137,12 @@
         <div class="box grid">
         </div>
         <div class="received-msgs"></div>
-        <div class="chat-btn"> 💬CHAT</div>
+        <div class="flex chat-container">
+            <form id="form-prevent">
+                <input type="text" placeholder="CHAT" class="chat-input">
+                <input type="submit" class="chat-btn" value="SEND">
+            </form>
+        </div>
     </div>
     <audio src="/audio/player1.mp3" id="player1-sound"></audio>
     <audio src="/audio/player2.mp3" id="player2-sound"></audio>
