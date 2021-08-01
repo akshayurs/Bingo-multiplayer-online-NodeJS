@@ -70,13 +70,15 @@ document.querySelector('#host-btn').addEventListener('click', (e) => {
     document.querySelector('[name="theme-color"]').setAttribute('content', "darkgreen")
     handelHost()
 })
-document.getElementById("name-form").addEventListener("submit", (e) => {
+document.getElementById("form-prevent").addEventListener("submit", (e) => {
     e.preventDefault()
 })
 document.querySelector('.chat-btn').addEventListener('click', () => {
-    let msg = prompt("ENTER TEXT");
-    if (msg != "" && msg != "null") {
+    let input = document.querySelector('.chat-input').value
+    let msg = input.value
+    if (msg != "") {
         socket.emit("chat", { msg })
+        input.value = ""
     }
 })
 
