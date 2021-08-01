@@ -416,17 +416,13 @@ footer h3{
     padding: 5px 0;
     font-weight: 350;
 }
-.chat-btn {
-    margin-top: 10px;
-    font-size: 20px;
-    font-weight: 500;
-    user-select: none;
-}
-.received-msgs{
+
+.received-msgs {
     position: absolute;
-    bottom: 25px;
+    top: 80px;
     left: 20px;
 }
+
 .received-msg {
     padding: 10px;
     margin: 5px;
@@ -434,14 +430,31 @@ footer h3{
     overflow-wrap: break-word;
     color: white;
     text-shadow: -1px 1px 4px black;
-    background-color: rgb(91, 214, 177);
+    background-color: teal;
     box-shadow: -1px 1px 4px black;
     border-radius: 10px;
     border-bottom-left-radius: 0;
     pointer-events: none;
     animation: disappear 0.5s ease-out;
+    user-select: none;
 }
 
+.chat-container {
+    margin-top: 10px;
+}
+
+.chat-input {
+    padding: 5px;
+    font-size: 20px;
+}
+
+.chat-btn {
+    padding: 7px;
+    background-color: lightslategrey;
+    font-size: 20px;
+    font-weight: 500;
+    user-select: none;
+  
 @keyframes disappear {
     0% {
         transform: translateY(50px);
