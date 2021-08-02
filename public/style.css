@@ -24,12 +24,12 @@ body{
     scroll-behavior: smooth;
 }
 .loader {
-    border: 16px solid #f3f3f3;
+    border: 8px solid #f3f3f3;
     border-radius: 50%;
-    border-top: 16px solid #000000;
-    border-bottom: 16px solid #000000;
-    width: 100px;
-    height: 100px;
+    border-top: 8px solid #220a38;
+    border-bottom: 8px solid #220a38;
+    width: 80px;
+    height: 80px;
     -webkit-animation: spin 2s ease-in-out infinite;
     animation: spin 1s ease-out infinite;
 }
@@ -48,10 +48,10 @@ body{
     top:0;
     height:100vh;
     width:100%;
-    color:white;
     font-size: 3rem;
-    background:linear-gradient(black,white);
-    text-shadow: 1px 1px 5px #330055,-1px -2px 5px #330055;
+    color: white;
+    background: linear-gradient(#42275a , #734b6d);
+    text-shadow: 0 0 25px black;
 }
 
 .slides{
@@ -78,7 +78,7 @@ body{
     font-weight: 500;
     letter-spacing: 0.5rem;
     background: lightgray;
-    box-shadow: 1px 1px 50px #9F5F80;
+    box-shadow: 0 0 50px #9F5F80;
     user-select: none;
 }
 
@@ -88,7 +88,7 @@ body{
     color:white;
     font-size:1.5rem;
     text-align: center;
-    text-shadow: 1px 1px 15px black;
+    text-shadow: 0 0 15px black;
 }
 
 .play-button-container{
@@ -104,8 +104,8 @@ body{
     transform: translate(-50%,-15%);
     padding: 1rem 2rem;
     background-color:ivory;
-    box-shadow: 2px 2px 15px black;
-    text-shadow: .8px .8px 2px black;
+    box-shadow: 0px 0px 15px black;
+    text-shadow: 0 0 2px black;
     border-radius: 10%;
     padding: 10;
     font-size:1.5rem;   
@@ -151,7 +151,7 @@ body{
     margin: 0 auto;
     padding: 8px 2px;
     font-size: 1.5rem;
-    box-shadow: 1px 1px 25px black;
+    box-shadow: 0 0 25px black;
     outline: none;
     border:none;
 }
@@ -161,7 +161,7 @@ body{
     padding: 8px 5px;
     font-size: 1rem ;
     margin: 50px auto;
-    box-shadow: 1px 1px 25px black;
+    box-shadow: 0 0 25px black;
 }
 
 .slide3{
@@ -207,7 +207,7 @@ body{
     margin: 15px;
     border-radius: 40%;
     border:2px solid black;
-    box-shadow: 3px 3px 25px black;
+    box-shadow: 0 0 25px black;
     filter: saturate(1.5);
 }
 
@@ -307,7 +307,6 @@ header {
     text-align: center;
     font-size: 2.5rem;
     background-color: #010101;
-    box-shadow: 1px 1px 5px black;
     text-shadow: 1px 1px 0.5px #ee1d52, -1.5px -1.5px 0.5px #69c9d0;
     box-shadow: 1px 1px 10px #ee1d52, 2px 2px 25px #69c9d0;
     letter-spacing: .2rem;
@@ -420,20 +419,20 @@ footer h3{
 .received-msgs {
     position: absolute;
     top: 80px;
-    left: 20px;
+    right: 20px;
 }
 
 .received-msg {
-    padding: 10px;
+    padding: 15px;
     margin: 5px;
     max-width: 300px;
     overflow-wrap: break-word;
     color: white;
     text-shadow: -1px 1px 4px black;
     background-color: teal;
-    box-shadow: -1px 1px 4px black;
+    box-shadow: 0 0 4px black;
     border-radius: 10px;
-    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
     pointer-events: none;
     animation: disappear 0.5s ease-out;
     user-select: none;
