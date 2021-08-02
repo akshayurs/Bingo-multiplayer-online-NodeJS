@@ -296,7 +296,7 @@ io.on('connection', (socket) => {
     data.name = sanitizeHTML(data.name, {
       allowedTags: [],
       allowedAttributes: {},
-    })
+    }).trim()
     if (isNaN(num) || num < 1 || num > 8) {
       socket.emit('error', { error: 'avatar not selected' })
       removeUser(socket.id)
@@ -314,7 +314,7 @@ io.on('connection', (socket) => {
     data.name = sanitizeHTML(data.name, {
       allowedTags: [],
       allowedAttributes: {},
-    })
+    }).trim()
     if (isNaN(num) || num < 1 || num > 8) {
       socket.emit('error', { error: 'avatar not selected' })
       removeUser(socket.id)
@@ -359,7 +359,7 @@ io.on('connection', (socket) => {
     data.msg = sanitizeHTML(data.msg, {
       allowedTags: [],
       allowedAttributes: {},
-    })
+    }).trim()
     if (!users.hasOwnProperty(socket.id)) {
       socket.emit('error', { error: 'User Invalid' })
       removeUser(socket.id)
@@ -379,7 +379,7 @@ io.on('connection', (socket) => {
     data.name = sanitizeHTML(data.name, {
       allowedTags: [],
       allowedAttributes: {},
-    })
+    }).trim()
     let num = parseInt(data.avatar)
     if (isNaN(num) || num < 1 || num > 8) {
       socket.emit('error', { error: 'avatar not selected' })
