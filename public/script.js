@@ -24,7 +24,7 @@ document.querySelector('.play-button').addEventListener('click', (e) => {
     document.querySelector('#next-sound').play()
 })
 document.querySelector('.next-btn').addEventListener('click', (e) => {
-    name = document.querySelector('#input-name').value
+    name = document.querySelector('#input-name').value.trim()
     localStorage.setItem("bingo-name", name)
     if (name != "") {
         document.querySelector('#next-sound').play()
@@ -77,7 +77,7 @@ document.querySelectorAll('.form-prevent').forEach(ele => {
 })
 document.querySelector('.chat-btn').addEventListener('click', () => {
     let input = document.querySelector('.chat-input')
-    let msg = input.value
+    let msg = input.value.trim()
     if (msg != "") {
         socket.emit("chat", { msg })
         input.value = ""
