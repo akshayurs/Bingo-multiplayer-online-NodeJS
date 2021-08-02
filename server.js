@@ -165,6 +165,7 @@ function handelJoin(socketId, roomid, name, avatar) {
         io.to(socketId).emit("joined", { player: roomObject[`player1-name`], box: box, avatar: roomObject[`player1-avatar`] })
         io.to(roomObject[`player1-socket`]).emit("start-game", { turn: true })
         io.to(socketId).emit("start-game", { turn: false })
+        console.log(rooms[roomid]['player1-name'],name)
     } else {
         io.to(socketId).emit("error", { error: "enter valid room id" })
         removeUser(socketId)
@@ -207,6 +208,7 @@ function handelRandom(socketId, name, avatar) {
         io.to(opponentSocket).emit('start-game', { turn: true })
         io.to(opponentSocket).emit('other-player-joined', { player: name, avatar: avatar })
         io.to(socketId).emit('other-player-joined', { player: rooms[roomid]['player1-name'], avatar: rooms[roomid]['player1-avatar'] })
+        console.log(rooms[roomid]['player1-name'],name)
     }
 }
 
