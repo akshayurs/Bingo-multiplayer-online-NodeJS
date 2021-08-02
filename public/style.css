@@ -295,6 +295,9 @@ body{
     margin:10px 20px;
     animation: side .5s ease-out;
 }
+.invite-msg{
+    animation: side .5s ease-out;
+}
 .game-screen{
     display: none;
     justify-content: center;
