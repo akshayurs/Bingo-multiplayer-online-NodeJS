@@ -135,7 +135,7 @@ function createCells(arr) {
 function fillBingo(player, num) {
     num = num > 5 ? 5 : num
     for (let i = 1; i <= num; i++) {
-        document.querySelector(`#${player}-letter-${i}`).style.backgroundColor = '#ac0081'
+        document.querySelector(`#${player}-letter-${i}`).style.backgroundColor = 'teal'
         document.querySelector(`#${player}-letter-${i}`).style.color = 'White'
     }
     for (let i = num + 1; i <= 5; i++) {
